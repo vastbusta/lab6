@@ -16,7 +16,9 @@ def main():
     g.insert_edge(0, 1,4)
     g.insert_edge(1, 2,5)
     g.insert_edge(2, 3,10)
+    g.insert_edge(2, 4,5)
     g.insert_edge(3, 4,20)
+    g.insert_edge(3, 5, 2)
     print('topological AL')
     print(topological_sort(g))
     
