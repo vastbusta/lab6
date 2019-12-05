@@ -1,4 +1,12 @@
-
+"""
+Author:Ruben Bustamante
+Instructor: Diego Aguirre
+TA:Gerarado Barraza
+Course: CS 2302
+Assigment: lab graph al
+Date of last modification: 12/03/2019
+Purpose of program:implement topogical and kruskals
+"""
 from queue import Queue
 from DSF2 import DisjointSetForest
 import math
@@ -83,27 +91,35 @@ class GraphAL:
                     e.append((i,edge.dest,edge.weight))
         e.sort(key=lambda weight:weight[2], reverse=False)
         return e
+    def cycle(self):
+        dsf = DisjointSetForest(self.num_vertices())
+        # travse thru the graph
+        for i in range(len(self.al)):
+            for edge in self.al[i]:
+                if edge.weight != 0:
+                    # check if cycle exist
+                    if dsf.find(i) == dsf.find(edge.dest):
+                        return True
+                    dsf.union(i,edge.dest)
+        return False
    
                 
 def kruskals(graph):
-    sort = graph.sort_edges()
-  
-    T={}
-    
-    forest = DisjointSetForest(len(sort))
-    for edge in sort:#sorted eges
-        for i in range(len(sort)):
-            if i == 0:#if index is zerot
-                 
-                T[edge[i]] = edge[i+1]# the first edeges
-         
-                forest.union(edge[i], edge[i+1])
-                i += 1
-
-    return T               
+        sorted_edges = graph.sort_edges()# stores the sorted edges
+        # empty graph
+        T = GraphAL(graph.num_vertices(), weighted=True, directed=True)
+      
         
-
-        
+        for i in range(graph.num_edges()):
+            # insert the vertices, edges and weight stored in thel ist
+            T.insert_edge(sorted_edges[i][0], sorted_edges[i][1], sorted_edges[i][2])
+            if T.cycle():# check if a cycle exist
+                # delete the edge if a cycle is there 
+                T.delete_edge(sorted_edges[i][0], sorted_edges[i][1])
+        # print new graph
+        for i in range(len(T.al)):
+            for edge in T.al[i]:
+                print(i,edge.dest,edge.weight)
         
 def compute_indegree(graph):# finds indegrees of each vertex
     
@@ -144,4 +160,3 @@ def topological_sort(graph):
         return None
     
     return sort_result # return the stored veritices 
-

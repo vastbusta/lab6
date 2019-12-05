@@ -1,4 +1,13 @@
-from scipy.interpolate import interp1d
+"""
+Author:Ruben Bustamante
+Instructor: Diego Aguirre
+TA:Gerarado Barraza
+Course: CS 2302
+Assigment: Lab graphs am
+Date of last modification: 12/03/2019
+Purpose of program: implement topogical and kruskals
+"""
+
 from queue import Queue
 from DSF2 import DisjointSetForest
     
@@ -25,6 +34,14 @@ class GraphAM:
         self.am.append(new_row)
 
         return len(self.am) - 1  # Return new vertex id
+    def num_edges(self):
+        count=0
+        
+        for i in range(len(self.am)):
+            for edge in range(len(self.am[i])):
+                if self.am[i][edge]!=0:
+                    count +=1
+        return count
 
     def insert_edge(self, src, dest, weight=1):
         if not self.is_valid_vertex(src) or not self.is_valid_vertex(dest):
@@ -51,38 +68,48 @@ class GraphAM:
         return reachable_vertices
 
     def sort_edges(self):
-            e = []
-            for i in  range(len(self.am)):
-                for edge in range(len(self.am)):
-                    if self.am[i][edge] !=0:
-                        e.append((i,edge, self.am[i][edge]))
-            e.sort(key=lambda weight:weight[2], reverse=False)
-            return e
+        e = []
+        for i in  range(len(self.am)):
+            for edge in range(len(self.am)):
+                if self.am[i][edge] !=0:
+                    e.append((i,edge, self.am[i][edge]))
+        e.sort(key=lambda weight:weight[2], reverse=False)
+        return e
     
+    def cycle(self):
+        dsf = DisjointSetForest(self.num_vertices())
+        edges = len(self.am)# number of vertices
+        for i in range(len(self.am)):
+ 
+            for e in range(edges):# edges 
+                if self.am[i][e] != 0:# check if an edges exist
+                    if dsf.find(i) == dsf.find(e):# check if cycle exist
+                        return True
+                    dsf.union(i,e)
+        return False
+                
 def kruskals_am(graph):
-    sort = graph.sort_edges()
-  
-    T={}
-    
-    forest = DisjointSetForest(len(sort))
-    for edge in sort:#sorted eges
-        for i in range(len(sort)):
-            if i == 0:#if index is zerot
-                 
-                T[edge[i]] = edge[i+1]# the first edeges
-         
-                forest.union(edge[i], edge[i+1])
-                i += 1
+        sorted_edges = graph.sort_edges()#sort the edges in a list
 
-    return T               
-        
-
-
+        T = GraphAM(graph.num_vertices(), weighted=True, directed=True)# empty graph
+      
+        for i in range(graph.num_edges()):
+            # inserte the vertices, edges and weight stored in the list
+            T.insert_edge(sorted_edges[i][0], sorted_edges[i][1], sorted_edges[i][2])
+            # deletes if the edge that cause the cylcle
+            if T.cycle():
+                T.delete_edge(sorted_edges[i][0], sorted_edges[i][1])
+        # the new graph     
+        for i in range(len(T.am)):
+            for e in range(len(T.am[i])):
+                if T.am[i][e]!=0:
+                    print(i,e,T.am[i][e])
+                    
 def compute_indegree(graph,v):
     indeg = 0
     for i in range(graph.num_vertices()):
-        if graph.am[i][v]>0:
-            indeg +=1
+        if graph.am[i][v]>0: # checks if a edge exist 
+            indeg +=1 # adds 1 for index for that vertex
     return indeg
 
 def topological_sort_am(graph):
@@ -104,10 +131,9 @@ def topological_sort_am(graph):
             if in_degree[j] == 0:
                 q.put(j)
 
-    if len(sort_result) != graph.num_vertices() :
+    if len(sort_result) != graph.num_vertices(): # eheck if a cycle exist
         return None
 
     return sort_result
 
-   
 

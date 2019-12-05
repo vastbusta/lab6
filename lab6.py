@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Nov 26 10:07:56 2019
-
-@author: vasto
+Author:Ruben Bustamante
+Instructor: Diego Aguirre
+TA:Gerarado Barraza
+Course: CS 2302
+Assigment: lab 7-unit test
+Date of last modification: 12/03/2019
+Purpose of program:graph test
 """
-
 from graph_al import GraphAL,topological_sort,kruskals
 from graph_am  import GraphAM, topological_sort_am,kruskals_am
 
@@ -14,7 +17,7 @@ def main():
     g.insert_edge(1, 2,5)
     g.insert_edge(2, 3,10)
     g.insert_edge(3, 4,20)
-  
+    print('topological AL')
     print(topological_sort(g))
     
 
@@ -23,8 +26,9 @@ def main():
     g2.insert_edge(1, 2,5)
     g2.insert_edge(2, 3,10)
     g2.insert_edge(3, 4,20)
+    print('topological AM')
     print(topological_sort_am(g2))
-    
+    print('Graph AM kruskals AL')
     g3 = GraphAL(6, weighted=True,directed=True)
     g3.insert_edge(0, 1,40)
     g3.insert_edge(0,2,6 )
@@ -34,9 +38,9 @@ def main():
     g3.insert_edge(3, 4,20)
     g3.insert_edge(4,0, 5)
     g3.insert_edge(4,2,1)
-    print(kruskals(g3))
-    
-    g4 = GraphAL(6, weighted=True,directed=True)
+    kruskals(g3)
+    print('Graph AM kruskals AM')
+    g4 = GraphAM(6, weighted=True,directed=True)
     g4.insert_edge(0, 1,40)
     g4.insert_edge(0,2,6 )
     g4.insert_edge(1, 2,5)
@@ -45,6 +49,6 @@ def main():
     g4.insert_edge(3, 4,20)
     g4.insert_edge(4,0, 5)
     g4.insert_edge(4,2,1)
-    print(kruskals_am(g4))
+    kruskals_am(g4)
   
 main()  
